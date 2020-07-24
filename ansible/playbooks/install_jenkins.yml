@@ -1,0 +1,50 @@
+# Based on https://github.com/DevOpsKarma/Ansible-Install-Jenkins-Ubuntu18/blob/master/ansible-install-jenkins-ubuntu18.yml
+---
+- name: Install Jenkins
+  hosts: default
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Run apt-get update
+      apt:
+        update_cache: yes
+
+    - name: Install Java 8 JDK
+      apt:
+        pkg:
+          - openjdk-8-jdk
+
+    - name: Install key for the Jenkins apt repository
+      apt_key:
+        url: "https://pkg.jenkins.io/debian/jenkins-ci.org.key"
+        state: present
+
+    - name: Install access to the Jenkins apt repository
+      apt_repository:
+        repo: deb http://pkg.jenkins.io/debian-stable binary/
+        state: present
+        filename: "jenkins-stable"
+
+    - name: Install Jenkins package
+      apt:
+        name: jenkins
+        update_cache: yes   
+
+    - name: Start & Enable Jenkins
+      systemd:
+        name: jenkins
+        state: started
+        enabled: true
+ 
+    - name: Wait for Jenkins to start up
+      wait_for: timeout=35
+
+    - name: Get Jenkins password
+      shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      changed_when: false
+      register: result
+
+    - name: Password to "Unlock Jenkins"
+      debug:
+        var: result.stdout
