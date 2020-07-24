@@ -1,3 +1,14 @@
+## Commands
+### Packer
+```
+    packer build packer/jenkins_image.json
+```
+### Terraform
+```
+    terraform plan -var-file="variables.tfvars"
+    terraform apply -var-file="variables.tfvars"
+    terraform destroy -var-file="variables.tfvars"
+```
 # sf-rampup
 The idea of this rampup is to learn the basic tools needed to start working in the SF project
 ## Pre-requisit
