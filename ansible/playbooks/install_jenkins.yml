@@ -1,6 +1,6 @@
 # Based on https://github.com/DevOpsKarma/Ansible-Install-Jenkins-Ubuntu18/blob/master/ansible-install-jenkins-ubuntu18.yml
 ---
-- name: Install Jenkins
+- name: Install Jenkins, Java and Maven
   hosts: default
   gather_facts: false
   become: true
@@ -11,9 +11,10 @@
         update_cache: yes
 
     - name: Install Java 8 JDK
-      apt:
-        pkg:
-          - openjdk-8-jdk
+      apt: name=openjdk-8-jdk state=latest
+
+    - name: Install Maven
+      apt: name=maven state=latest
 
     - name: Install key for the Jenkins apt repository
       apt_key:
@@ -26,17 +27,19 @@
         state: present
         filename: "jenkins-stable"
 
-    - name: Install Jenkins package
+    - name: Run apt-get update
       apt:
-        name: jenkins
-        update_cache: yes   
+        update_cache: yes
+
+    - name: Install Jenkins package
+      command: apt install jenkins -y --allow-unauthenticated
 
     - name: Start & Enable Jenkins
       systemd:
         name: jenkins
         state: started
         enabled: true
- 
+
     - name: Wait for Jenkins to start up
       wait_for: timeout=35
 

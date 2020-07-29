@@ -1,11 +1,19 @@
 variable "aws_region" {
-  type = string
+  type = "string"
 }
 
 variable "instance_type" {
-  type = string
+  type = "string"
 }
 
 variable "image_id" {
-  type = string
+  type = "string"
+}
+
+variable "key_name" {
+  type = "string"
+}
+
+variable "jenkins_port" {
+  type = "string"
 }

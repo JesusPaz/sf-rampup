@@ -1,0 +1,24 @@
+---
+- name: Install AWS CLI
+  hosts: default
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Run apt-get update
+      apt:
+        update_cache: yes
+
+    - name: Install unzip
+      apt:
+        name: unzip
+        update_cache: yes
+        
+    - name: Unarchive aws cli 2
+      unarchive:
+        src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: ./
+        remote_src: yes
+
+    - name: install aws cli 2
+      command: ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
